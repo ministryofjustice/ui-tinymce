@@ -38,9 +38,9 @@ bower install
 This will copy the ui-tinymce files into your `components` folder, along with its dependencies. Load the script files in your application:
 
 ```html
-<script type="text/javascript" src="app/bower_components/tinymce/tinymce.js"></script>
+<script type="text/javascript" src="app/bower_components/tinymce-dist/tinymce.js"></script>
 <script type="text/javascript" src="app/bower_components/angular/angular.js"></script>
-<script type="text/javascript" src="app/bower_components/angular-ui-tinymce/tinymce.js"></script>
+<script type="text/javascript" src="app/bower_components/angular-ui-tinymce/src/tinymce.js"></script>
 ```
 
 Add the tinymce module as a dependency to your application module:
@@ -69,13 +69,34 @@ If you add the ng-model directive to same the element as ui-tinymce then the tex
 
 _The ui-tinymce directive stores the configuration options as specified in the [TinyMCE documentation](http://www.tinymce.com/wiki.php/Configuration) and expects the model value to be a html string or raw text, depending on whether `raw` is `true` (default value is `false`)._
 
+**Note:** Make sure you using scopes correctly by following [this wiki page](https://github.com/angular/angular.js/wiki/Understanding-Scopes). If you are having issues with your model not updating, make sure you have a '.' in your model.
+
+> This issue with primitives can be easily avoided by following the "best practice" of always have a '.' in your ng-models – watch 3 minutes worth. Misko demonstrates the primitive binding issue with ng-switch.
+
 ## Options
 
 The directive supports all of the standard TinyMCE initialization options as listed [here](http://www.tinymce.com/wiki.php/Configuration).
 
+Use the [setup](https://www.tinymce.com/docs/configure/integration-and-setup/#setup) function to bind different events:
+
+```javascript
+scope.tinymceOptions = {
+  setup: function(editor) {
+      //Focus the editor on load
+      $timeout(function(){ editor.focus(); });
+      editor.on("init", function() {
+        ...
+      });
+      editor.on("click", function() {
+        ...
+      });
+  }
+};
+```
+
 In addition, it supports these additional optional options
 
-- `format` Format to get content as, i.e. 'raw' for raw HTML, or 'text' for text only. Documentation [here](http://www.tinymce.com/wiki.php/api4:method.tinymce.Editor.getContent)
+- `format` Format to get content as, i.e. 'raw' for raw HTML, or 'text' for text only. Defaults to 'html'. Documentation [here](http://www.tinymce.com/wiki.php/api4:method.tinymce.Editor.getContent)
 - `trusted` When `true`, all TinyMCE content that is set to `ngModel` will be whitelisted by `$sce`
 
 This option is only supported when present on the `uiTinymceConfig` global injectable - this injectable needs to be an object.
@@ -99,4 +120,11 @@ myAppModule.controller('MyController', function($scope) {
 <form method="post">
   <textarea ui-tinymce="tinymceOptions" ng-model="tinymceModel"></textarea>
 </form>
-```documentation
+```
+
+----
+
+
+# Contributing to the project
+
+We are always looking for the quality contributions! Please check the [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution guidelines.
