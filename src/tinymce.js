@@ -65,6 +65,9 @@ angular.module('ui.tinymce', [])
               if (form) {
                 form.$setPristine();
               }
+              if (tinyInstance && $('#themeCSS').attr('href')) {
+                tinyInstance.dom.loadCSS($('#themeCSS').attr('href'));
+              }
             });
 
             // Update model on button click
